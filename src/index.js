@@ -26,7 +26,7 @@ async function showChampions() {
 
         championElement.innerHTML = `
             <div class="image-container">
-                <img src="https://ddragon.leagueoflegends.com/cdn/img/champion/loading/${champion.id}_0.jpg" alt="${champion.name}" class="loading">
+                <img state = "${champion.skins[0].id}" src="https://ddragon.leagueoflegends.com/cdn/img/champion/loading/${champion.id}_0.jpg" alt="${champion.name}" class="loading">
                 <h2>${champion.name}</h2>
                 <div class="abilities">
                     <div class="ability-container">
@@ -40,7 +40,7 @@ async function showChampions() {
                     </div>`).join('')}
                 </div>
             </div>
-            <p>${champion.title.slice(0,1).toUpperCase()+champion.title.slice(1)}</p>
+            <p>${champion.title.slice(0, 1).toUpperCase() + champion.title.slice(1)}</p>
         `;
         DOM.container.appendChild(championElement);
     });
@@ -48,14 +48,48 @@ async function showChampions() {
 
     document.querySelectorAll('.champion').forEach((championElement) => {
         addMouseEffects(championElement);
+        championElement.addEventListener('click', () => {
+            let img = championElement.childNodes[1].childNodes[1];
+            let state = img.getAttribute('state');
+            let skins = null;
+            let actualSkinPos = null;
+            let nextSkin = null;
+
+            for (let i = 0; i < champions.length; i++) {
+
+                if (champions[i].id = championElement.id) {
+                    skins = champions[i].skins;
+                    console.log(skins);
+                    break;
+                }
+
+            }
+            for (let i = 0; i < skins.length; i++) {
+                if (skins[i].id === state) {
+                    actualSkinPos = i;
+                    break;
+                }
+            }
+            if (skins[actualSkinPos + 1]) {
+                nextSkin = skins[actualSkinPos + 1];
+            } else {
+                nextSkin = skins[0];
+            }
+
+            if (nextSkin) {
+                img.setAttribute('src', `https://ddragon.leagueoflegends.com/cdn/img/champion/loading/${championElement.id}_${nextSkin.num}.jpg`);
+                img.setAttribute('state', nextSkin.id);
+            }
+        })
     });
+
 }
 
 
 showChampions();
 
-let constrain = 200; 
-let maxRotation = 1; 
+let constrain = 200;
+let maxRotation = 1;
 
 function transforms(x, y, el) {
     let box = el.getBoundingClientRect();
