@@ -1,0 +1,144 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    background-color: #000000;
+}
+
+#container {
+    margin: auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-gap: 20px; 
+    padding: 20px;
+    align-items: center;
+    text-align: center;
+}
+
+
+.champion {
+    background: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.3s ease,box-shadow 0.3s ease,filter .3s ease;
+}
+
+
+.champion:hover {
+    box-shadow: 0 16px 32px 0 rgba(255, 255, 255, 0.548);
+}
+
+.image-container:hover h2{
+    opacity: 0;
+}
+
+.image-container {
+    position: relative;
+    width: 100%;
+    display: inline-block;
+    overflow: hidden;
+    background-color: rgb(0, 0, 0);
+    
+    
+}
+
+
+.loading {
+    width: 100%;
+    height: auto;
+    cursor: pointer;
+
+
+}
+
+
+h2 {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    margin: 0;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.6);
+    color: #fff;
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    box-sizing: border-box;
+    opacity: 1;
+    transition: opacity 0.3 ease;
+}
+
+
+.abilities {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.6);
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 10px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+    border-radius: 0 0 10px 10px;
+}
+
+
+.image-container:hover .abilities {
+    visibility: visible;
+    opacity: 1;
+}
+
+
+.ability {
+    width: 40px;
+    height: 40px;
+    margin: 0 10px;
+    border-radius: 50%;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+}
+
+
+.ability-container {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip {
+    visibility: hidden;
+    width: 100px;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%; 
+    left: 50%;
+    margin-left: -50px;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+
+.ability-container:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+}
+.ability-container:hover .ability{
+    box-shadow: 0px 0px 18px 5px white;
+}
+
+
+p {
+    font-size: 14px;
+    color: #666;
+    margin: 10px 0;
+}
