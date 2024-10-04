@@ -6,31 +6,33 @@ const DOM = {
 async function getChampions() {
     const response = await fetch('https://ddragon.leagueoflegends.com/cdn/14.19.1/data/en_US/champion.json');
     const data = await response.json();
-    let champions = [];
+    const champions = {};
 
-    for (let champion of Object.values(data.data)) {
+    // Cargar los datos detallados de cada campeón
+    await Promise.all(Object.values(data.data).map(async (champion) => {
         const res = await fetch(`https://ddragon.leagueoflegends.com/cdn/14.19.1/data/en_US/champion/${champion.id}.json`);
         const detailedData = await res.json();
-        champions.push(Object.values(detailedData.data)[0]);
-    }
+        champions[champion.id] = Object.values(detailedData.data)[0];
+    }));
+
     return champions;
 }
 
 async function showChampions() {
     const champions = await getChampions();
 
-    champions.forEach((champion) => {
+    Object.values(champions).forEach((champion) => {
         const championElement = document.createElement('div');
         championElement.classList.add('champion');
         championElement.setAttribute("id", champion.id);
 
         championElement.innerHTML = `
             <div class="image-container">
-                <img state = "${champion.skins[0].id}" src="https://ddragon.leagueoflegends.com/cdn/img/champion/loading/${champion.id}_0.jpg" alt="${champion.name}" class="loading">
+                <img state="${champion.skins[0].id}" src="https://ddragon.leagueoflegends.com/cdn/img/champion/loading/${champion.id}_0.jpg" alt="${champion.name}" class="loading">
                 <h2>${champion.name}</h2>
                 <div class="abilities">
                     <div class="ability-container">
-                        <img src="https://ddragon.leagueoflegends.com/cdn/14.19.1/img/passive/${champion.passive.image.full}" alt ="${champion.passive.name}" class="ability"/>
+                        <img src="https://ddragon.leagueoflegends.com/cdn/14.19.1/img/passive/${champion.passive.image.full}" alt="${champion.passive.name}" class="ability"/>
                         <span class="tooltip">${champion.passive.name}</span>
                     </div>
                     ${champion.spells.map(spell => `
@@ -45,46 +47,28 @@ async function showChampions() {
         DOM.container.appendChild(championElement);
     });
 
-
     document.querySelectorAll('.champion').forEach((championElement) => {
         addMouseEffects(championElement);
         championElement.addEventListener('click', () => {
-            let img = championElement.childNodes[1].childNodes[1];
+            let img = championElement.querySelector('img.loading');
             let state = img.getAttribute('state');
-            let skins = null;
-            let actualSkinPos = null;
-            let nextSkin = null;
+            
 
-            for (let i = 0; i < champions.length; i++) {
+            const champion = champions[championElement.id];
+            const skins = champion.skins;
 
-                if (champions[i].id = championElement.id) {
-                    skins = champions[i].skins;
-                    console.log(skins);
-                    break;
-                }
 
-            }
-            for (let i = 0; i < skins.length; i++) {
-                if (skins[i].id === state) {
-                    actualSkinPos = i;
-                    break;
-                }
-            }
-            if (skins[actualSkinPos + 1]) {
-                nextSkin = skins[actualSkinPos + 1];
-            } else {
-                nextSkin = skins[0];
-            }
+            const actualSkinPos = skins.findIndex(skin => skin.id == state);
 
-            if (nextSkin) {
-                img.setAttribute('src', `https://ddragon.leagueoflegends.com/cdn/img/champion/loading/${championElement.id}_${nextSkin.num}.jpg`);
-                img.setAttribute('state', nextSkin.id);
-            }
-        })
+
+            const nextSkin = skins[(actualSkinPos + 1) % skins.length];
+
+
+            img.setAttribute('src', `https://ddragon.leagueoflegends.com/cdn/img/champion/loading/${championElement.id}_${nextSkin.num}.jpg`);
+            img.setAttribute('state', nextSkin.id);
+        });
     });
-
 }
-
 
 showChampions();
 
@@ -95,7 +79,6 @@ function transforms(x, y, el) {
     let box = el.getBoundingClientRect();
     let calcX = -(y - box.y - (box.height / 2)) / constrain;
     let calcY = (x - box.x - (box.width / 2)) / constrain;
-
 
     calcX = Math.max(-maxRotation, Math.min(maxRotation, calcX));
     calcY = Math.max(-maxRotation, Math.min(maxRotation, calcY));
