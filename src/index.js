@@ -52,7 +52,7 @@ async function showChampions() {
         championElement.addEventListener('click', () => {
             let img = championElement.querySelector('img.loading');
             let state = img.getAttribute('state');
-            
+
 
             const champion = champions[championElement.id];
             const skins = champion.skins;
@@ -62,10 +62,14 @@ async function showChampions() {
 
 
             const nextSkin = skins[(actualSkinPos + 1) % skins.length];
+            img.style.opacity = 0;
 
+            setTimeout(() => {
+                img.setAttribute('src', `https://ddragon.leagueoflegends.com/cdn/img/champion/loading/${championElement.id}_${nextSkin.num}.jpg`);
+                img.setAttribute('state', nextSkin.id);
+                img.style.opacity = 1;
 
-            img.setAttribute('src', `https://ddragon.leagueoflegends.com/cdn/img/champion/loading/${championElement.id}_${nextSkin.num}.jpg`);
-            img.setAttribute('state', nextSkin.id);
+            }, 300);
         });
     });
 }

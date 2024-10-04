@@ -48,7 +48,7 @@ body {
     width: 100%;
     height: auto;
     cursor: pointer;
-
+    transition: opacity .5s ease;
 
 }
 
