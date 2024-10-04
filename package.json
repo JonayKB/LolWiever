@@ -4,7 +4,7 @@
   "description": "",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "parcel build src/index.html",
+    "build": "parcel build src/index.html --public-url /LolWiever/",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist"
   },
